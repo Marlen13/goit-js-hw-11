@@ -3,7 +3,7 @@ import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-// console.log(axios);
+console.log(axios);
 
 const form = document.querySelector('.search-form');
 const gallery = document.querySelector('.gallery');
@@ -17,77 +17,72 @@ let pageToFetch = 0;
 let queryToFetch = '';
 
 async function fetchEvents(q, page) {
-    try {
-      const { data } = await axios('', {
+  try {
+    const { data } = await axios('', {
       param: {
         key: API_KEY,
         q,
-        image_type: photo,
-        orientation: horizontal,
+        image_type: 'photo',
+        orientation: 'horizontal',
         safesearch: true,
         page,
         per_page,
       },
     });
-      return data;
+    console.log(data);
+    return data;
   } catch (error) {
     console.log(error);
-    allert('Sorry, there are no images matching your search query. Please try again.')
-    } 
+    // allert('Sorry, there are no images matching your search query. Please try again.')
+  }
 }
-// fetchUsersBtn.addEventListener("click", async () => {
-//   try {
-//     const users = await fetchUsers();
-//     renderUserListItems(users);
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// });
-
-// async function fetchUsers() {
-//   const baseUrl = "https://jsonplaceholder.typicode.com";
-//   const userIds = [1, 2, 3, 4, 5];
-
-//   const arrayOfPromises = userIds.map(async (userId) => {
-//     const response = await fetch(`${baseUrl}/users/${userId}`);
-//     return response.json();
-// function getEvents(q, page) {
-
-//   fetchEvents(q, page)
-//     .then(data => {
-//       console.log(data);
-//       if (!data.page.totalElements) {
-//         alert(`There are no events by keyword ${query}`);
-//         return;
-//       }
-//       const events = data._embedded.events;
-//       console.log(events);
-//       renderEvents(events);
-//       if (
-//         data.page.totalPages > 1 &&
-//         pageToFetch + 1 !== data.page.totalPages
-//       ) {
-//         button.classList.remove('unvisible');
-//       }
-//     })
-//     .finally(() => {
-//       // loader.classList.add('unvisible')
-//     });
-// }
-// function renderEvents(events) {
-//   const markup = events
-//     .map(({ webformatURL, tags, likes, views, comments, downloads }) => {
-//       return ` <img src="${webformatURL}" alt="${tags}"> 
-//        <div class="img-container">
-//         <p class="img-info">${likes}</p>
-//         <p class="img-info">${views}</p>
-//         <p class="img-info">${comments}</p>
-//         <p class="img-info">${downloads}</p>
-//       </div>`;
-//     })
-//     .join('');
-//  gallery.insertAdjacentHTML('beforeend', markup);
-// }
+async function getEvents(q, page) {
+  const data = await fetchEvents(q, page)
+    .then(data => {
+      console.log(data);
+      if (!data.page.totalElements) {
+        alert(`There are no events by keyword ${query}`);
+        return;
+      }
+      const events = data._embedded.events;
+      console.log(events);
+      renderEvents(events);
+      if (
+        data.page.totalPages > 1 &&
+        pageToFetch + 1 !== data.page.totalPages
+      ) {
+        button.classList.remove('unvisible');
+      }
+    })
+    .finally(() => {
+      // loader.classList.add('unvisible')
+    });
+}
+function renderEvents(events) {
+  const markup = events
+    .map(
+      ({
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) => {
+            return `<a class="gallery-link" href="${largeImageURL}">
+            <img class="gallery-img" src="${webformatURL}" alt="${tags}"></a> 
+            <div class="img-container">
+            <p class="img-info">${likes}</p>
+            <p class="img-info">${views}</p>
+            <p class="img-info">${comments}</p>
+            <p class="img-info">${downloads}</p>
+            </div>`;
+      }
+    )
+    .join('');
+  gallery.insertAdjacentHTML('beforeend', markup);
+}
 
 // form.addEventListener("submit", handleSubmit);
 // function handleSubmit(event) {
@@ -109,3 +104,20 @@ async function fetchEvents(q, page) {
 //   pageToFetch += 1;
 //   getEvents(queryToFetch, pageToFetch);
 // }
+
+// fetchUsersBtn.addEventListener("click", async () => {
+//   try {
+//     const users = await fetchUsers();
+//     renderUserListItems(users);
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// });
+
+// async function fetchUsers() {
+//   const baseUrl = "https://jsonplaceholder.typicode.com";
+//   const userIds = [1, 2, 3, 4, 5];
+
+//   const arrayOfPromises = userIds.map(async (userId) => {
+//     const response = await fetch(`${baseUrl}/users/${userId}`);
+//     return response.json();
