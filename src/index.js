@@ -41,7 +41,7 @@ function createMarkup(photo) {
                         downloads,
                     }) => {
                         return `<div class="gallery-item"><a class="gallery-link" href="${largeImageURL}">
-<img class="gallery-img" src="${webformatURL}" alt="${tags}"></a>
+<img class="gallery-img" src="${webformatURL}" alt="${tags}" width=370px></a>
 <div class="img-container">
 <p class="img-info"><b>Likes</b>${likes}</p>
 <p class="img-info"><b>Views</b>${views}</p>

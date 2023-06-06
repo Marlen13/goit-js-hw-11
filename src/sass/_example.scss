@@ -32,6 +32,7 @@
   position: relative;
   padding-top: 32px;
   padding-bottom: 32px;
+  margin-bottom: 15px;
   text-align: center;
   background-color: blue;
 }
@@ -42,13 +43,15 @@
 }
 .gallery {
   display: flex;
+  flex-wrap: wrap;
+  // flex-basis: calc((100% - 30 * 2)/3);
   gap: 30px;
   padding-right: 15px;
   padding-left: 15px;
 }
-.gallery-img {
-  min-width: 400px;
-}
+// .gallery-img {
+//   min-width: 370px;
+// }
 
 .img-container {
   display: flex;
