@@ -40,14 +40,14 @@ function createMarkup(photo) {
                         comments,
                         downloads,
                     }) => {
-                        return `<a class="gallery-link" href="${largeImageURL}">
+                        return `<div class="gallery-item"><a class="gallery-link" href="${largeImageURL}">
 <img class="gallery-img" src="${webformatURL}" alt="${tags}"></a>
 <div class="img-container">
 <p class="img-info"><b>Likes</b>${likes}</p>
-<p class="img-info">${views}</p>
-<p class="img-info">${comments}</p>
-<p class="img-info">${downloads}</p>
-</div>`;
+<p class="img-info"><b>Views</b>${views}</p>
+<p class="img-info"><b>Comments</b>${comments}</p>
+<p class="img-info"><b>Downloads</b>${downloads}</p>
+</div></div>`;
         }
     )
     .join('');
