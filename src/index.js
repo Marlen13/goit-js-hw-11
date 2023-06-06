@@ -40,13 +40,25 @@ function createMarkup(photo) {
                         comments,
                         downloads,
                     }) => {
-                        return `<div class="gallery-item"><a class="gallery-link" href="${largeImageURL}">
-<img class="gallery-img" src="${webformatURL}" alt="${tags}" width=370px></a>
+                        return `<div class="gallery-item"><div class="img-thumb"><a class="gallery-link" href="${largeImageURL}">
+<img class="gallery-img" src="${webformatURL}" alt="${tags}"></a></div>
 <div class="img-container">
-<p class="img-info"><b>Likes</b>${likes}</p>
-<p class="img-info"><b>Views</b>${views}</p>
-<p class="img-info"><b>Comments</b>${comments}</p>
-<p class="img-info"><b>Downloads</b>${downloads}</p>
+<div class="img-info">
+<p class="img-info"><b>Likes</b></p>
+<p class="img-value">${likes}</p>
+</div>
+<div class="img-info">
+<p class="img-info"><b>Views</b></p>
+<p class="img-value">${views}</p>
+</div>
+<div class="img-info">
+<p class="img-info"><b>Comments</b></p>
+<p class="img-value">${comments}</p>
+</div>
+<div class="img-info">
+<p class="img-info"><b>Downloads</b></p>
+<p class="img-value">${downloads}</p>
+</div>
 </div></div>`;
         }
     )
