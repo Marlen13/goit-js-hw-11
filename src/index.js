@@ -19,7 +19,10 @@ function handleSubmit(event) {
     event.preventDefault();
     pageToFetch = 1;
   gallery.innerHTML = '';
-  queryToFetch = event.target.elements.searchQuery.value;
+    queryToFetch = event.target.elements.searchQuery.value.trim();
+    if (queryToFetch === '') {
+        return
+    }
   fetchImages(queryToFetch, pageToFetch).then(data => createMarkup(data)) ;
 }
 
