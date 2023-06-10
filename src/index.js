@@ -7,7 +7,7 @@ import { fetchImages } from './api';
 const form = document.querySelector('.search-form');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
-const imgToFetch = 200;
+const perPage = 40;
 let pageToFetch = 1;
 let queryToFetch = '';
 let lightbox = new SimpleLightbox('.gallery a', {});
@@ -18,7 +18,6 @@ async function handleSubmit(event) {
   event.preventDefault();
   pageToFetch = 1;
     gallery.innerHTML = '';
-    // loadMoreBtn.classList.add('unvisible');
   queryToFetch = event.target.elements.searchQuery.value.trim();
   if (queryToFetch === '') {
       return;
@@ -32,10 +31,7 @@ async function handleSubmit(event) {
 }
 
 function createMarkup(photo) {
-//   if (photo === undefined) {
-//     loadMoreBtn.classList.add('unvisible');
-//     return;
-//   }
+  
     loadMoreBtn.classList.add('unvisible');
   const markup = photo?.hits
     .map(
@@ -74,15 +70,7 @@ function createMarkup(photo) {
   gallery.insertAdjacentHTML('beforeend', markup);
     lightbox.refresh();
     loadMoreBtn.classList.remove('unvisible');
-    // console.log(photo?.hits)
-    // console.log(photo)
-    // console.log(photo?.hits.length)
-//       if (photo.totalHits === photo.hits.length) {
-//           loadMoreBtn.classList.remove("unvisible");
-//           Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
     
-//   }
-
 }
 
 loadMoreBtn.addEventListener('click', handleLoadMore);
@@ -92,9 +80,8 @@ async function handleLoadMore() {
     const data = await fetchImages(queryToFetch, pageToFetch);
     loadMoreBtn.classList.add('unvisible');
     createMarkup(data);
-    const shownImages = data.hits.length * pageToFetch;
-  if (shownImages <= data.totalHits && data.hits.length <= imgToFetch) {
-        loadMoreBtn.classList.add('unvisible'); 
-        Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
-    } 
+  if (Math.ceil(data.totalHits / perPage) === pageToFetch) {
+    loadMoreBtn.classList.add('unvisible');
+    Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
+  }
 }

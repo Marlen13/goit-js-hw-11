@@ -5,7 +5,7 @@ const API_KEY = '37030497-adb1b30a9790add5f50421470';
 export async function fetchImages(q, page) {
   try {
     const { data } = await axios(
-      `?key=${API_KEY}&q=${q}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=200`
+      `?key=${API_KEY}&q=${q}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=40`
     );
     if (data.hits.length === 0) { 
       
@@ -14,7 +14,6 @@ export async function fetchImages(q, page) {
     console.log(data);
     return data;
   } catch (error) {
-// Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
  console.log(error)
   }
 }
