@@ -83,12 +83,6 @@ function createMarkup(photo) {
     
 //   }
 
-//   if (photo?.hits.length !== 0) {
-
-//     //   Notiflix.Notify.success(`Hooray! We found ${photo?.totalHits} images.`)
-
-    //   loadMoreBtn.classList.remove("unvisible")
-//   }
 }
 
 loadMoreBtn.addEventListener('click', handleLoadMore);
@@ -99,7 +93,7 @@ async function handleLoadMore() {
     loadMoreBtn.classList.add('unvisible');
     createMarkup(data);
     const shownImages = data.hits.length * pageToFetch;
-    if (shownImages <= data.totalHits || data.hits.length < imgToFetch) {
+  if (shownImages <= data.totalHits && data.hits.length <= imgToFetch) {
         loadMoreBtn.classList.add('unvisible'); 
         Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
     } 
