@@ -7,43 +7,48 @@ import { fetchImages } from './api';
 const form = document.querySelector('.search-form');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
-
+const imgToFetch = 200;
 let pageToFetch = 1;
 let queryToFetch = '';
-let lightbox = new SimpleLightbox('.gallery a', {
-});
-
+let lightbox = new SimpleLightbox('.gallery a', {});
 
 form.addEventListener('submit', handleSubmit);
-function handleSubmit(event) {
-    event.preventDefault();
-    pageToFetch = 1;
-  gallery.innerHTML = '';
-    queryToFetch = event.target.elements.searchQuery.value.trim();
-    if (queryToFetch === '') {
-        return
+
+async function handleSubmit(event) {
+  event.preventDefault();
+  pageToFetch = 1;
+    gallery.innerHTML = '';
+    // loadMoreBtn.classList.add('unvisible');
+  queryToFetch = event.target.elements.searchQuery.value.trim();
+  if (queryToFetch === '') {
+      return;
+  } 
+    const data = await fetchImages(queryToFetch, pageToFetch);
+    createMarkup(data);
+    if (pageToFetch === 1) {
+        Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
+        
     }
-  fetchImages(queryToFetch, pageToFetch).then(data => createMarkup(data)) ;
 }
 
 function createMarkup(photo) {
-
-    if (photo === undefined) {
-        loadMoreBtn.classList.add("unvisible");
-        return;
-    }
-            const markup = photo?.hits
-                .map(
-                    ({
-                        webformatURL,
-                        largeImageURL,
-                        tags,
-                        likes,
-                        views,
-                        comments,
-                        downloads,
-                    }) => {
-                        return `<div class="gallery-item"><div class="img-thumb"><a class="gallery-link" href="${largeImageURL}">
+//   if (photo === undefined) {
+//     loadMoreBtn.classList.add('unvisible');
+//     return;
+//   }
+    loadMoreBtn.classList.add('unvisible');
+  const markup = photo?.hits
+    .map(
+      ({
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) => {
+        return `<div class="gallery-item"><div class="img-thumb"><a class="gallery-link" href="${largeImageURL}">
 <img class="gallery-img" src="${webformatURL}" alt="${tags}" width="600" height="400"></a></div>
 <div class="img-container">
 <div class="img-info">
@@ -63,22 +68,39 @@ function createMarkup(photo) {
 <p class="img-value">${downloads}</p>
 </div>
 </div></div>`;
-        }
+      }
     )
     .join('');
-    gallery.insertAdjacentHTML('beforeend', markup);
+  gallery.insertAdjacentHTML('beforeend', markup);
     lightbox.refresh();
-    if (photo?.hits.length !== 0) {
-        
-        Notiflix.Notify.success(`Hooray! We found ${photo?.totalHits} images.`)    
-        
-        loadMoreBtn.classList.remove("unvisible")
-    }
+    loadMoreBtn.classList.remove('unvisible');
+    // console.log(photo?.hits)
+    // console.log(photo)
+    // console.log(photo?.hits.length)
+//       if (photo.totalHits === photo.hits.length) {
+//           loadMoreBtn.classList.remove("unvisible");
+//           Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
+    
+//   }
+
+//   if (photo?.hits.length !== 0) {
+
+//     //   Notiflix.Notify.success(`Hooray! We found ${photo?.totalHits} images.`)
+
+    //   loadMoreBtn.classList.remove("unvisible")
+//   }
 }
 
-loadMoreBtn.addEventListener("click", handleLoadMore);
+loadMoreBtn.addEventListener('click', handleLoadMore);
 
-function handleLoadMore() {
-pageToFetch += 1;
-    fetchImages(queryToFetch, pageToFetch).then(data => createMarkup(data));
+async function handleLoadMore() {
+  pageToFetch += 1;
+    const data = await fetchImages(queryToFetch, pageToFetch);
+    loadMoreBtn.classList.add('unvisible');
+    createMarkup(data);
+    const shownImages = data.hits.length * pageToFetch;
+    if (shownImages <= data.totalHits || data.hits.length < imgToFetch) {
+        loadMoreBtn.classList.add('unvisible'); 
+        Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
+    } 
 }
